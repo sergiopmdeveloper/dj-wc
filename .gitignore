@@ -9,3 +9,10 @@ __pycache__
 
 # Environment
 .env
+
+# Node.js dependencies
+node_modules
+
+# Production
+bundle.js
+bundle.js.LICENSE.txt
