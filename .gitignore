@@ -1,0 +1,11 @@
+# Local database
+db.sqlite3
+
+# Development
+.devcontainer
+
+# Cache
+__pycache__
+
+# Environment
+.env
