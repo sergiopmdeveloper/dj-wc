@@ -1,2 +1,3 @@
 -r requirements.txt
 djlint==1.34.1
+pre-commit==3.8.0
