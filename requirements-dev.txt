@@ -1,0 +1,2 @@
+-r requirements.txt
+djlint==1.34.1
