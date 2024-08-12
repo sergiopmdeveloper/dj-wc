@@ -5,10 +5,12 @@
     "build": "webpack --env production",
     "build:dev": "webpack --env development",
     "watch": "webpack --watch --env development",
+    "prettier": "npx prettier --check 'src/**/*'",
     "postinstall": "npm run build:dev"
   },
   "devDependencies": {
     "@types/webpack-env": "^1.18.5",
+    "prettier": "3.3.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.93.0",
