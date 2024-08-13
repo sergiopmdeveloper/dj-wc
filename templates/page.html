@@ -1,0 +1,28 @@
+{# Base page template #}
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="keywords" content="Django, Lit components" />
+    <meta name="description"
+          content="{% block description %}Django template based on Lit components{% endblock description %}" />
+
+    {% load static %}
+    <script src="{% static 'js/bundle.js' %}" defer></script>
+
+    <title>
+      {% block title %}
+        dj-wc | Django template based on Lit components
+      {% endblock title %}
+    </title>
+  </head>
+
+  <body>
+    {% block body %}
+      <span>Hey developer! You forget to add the content of this page 🫣</span>
+    {% endblock body %}
+  </body>
+</html>
