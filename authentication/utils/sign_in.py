@@ -2,7 +2,7 @@ from typing import Optional
 
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
-from django.http import HttpRequest
+from django.core.handlers.wsgi import WSGIRequest
 
 from authentication.models import AppUser
 from authentication.utils.abstract_authentication import AbstractAuthentication
@@ -14,7 +14,7 @@ class SignIn(AbstractAuthentication):
 
     Attributes
     ----------
-    request : HttpRequest
+    request : WSGIRequest
         The request object
     errors : list[str]
         The errors
@@ -29,13 +29,13 @@ class SignIn(AbstractAuthentication):
         Validates the user credentials
     """
 
-    def __init__(self, request: HttpRequest) -> None:
+    def __init__(self, request: WSGIRequest) -> None:
         """
         Initializes the sign in object
 
         Parameters
         ----------
-        request : HttpRequest
+        request : WSGIRequest
             The request object
         """
 

@@ -1,5 +1,6 @@
 from django.contrib.auth import login
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -14,13 +15,13 @@ class SignInView(View):
     """
 
     @method_decorator(never_cache)
-    def get(self, request: HttpRequest) -> HttpResponse:
+    def get(self, request: WSGIRequest) -> HttpResponse:
         """
         Renders the sign in page
 
         Parameters
         ----------
-        request : HttpRequest
+        request : WSGIRequest
             The request object
 
         Returns
@@ -34,13 +35,13 @@ class SignInView(View):
 
         return render(request, "authentication/sign-in.html")
 
-    def post(self, request: HttpRequest) -> JsonResponse | HttpResponse:
+    def post(self, request: WSGIRequest) -> JsonResponse | HttpResponse:
         """
         Handles the sign in form submission
 
         Parameters
         ----------
-        request : HttpRequest
+        request : WSGIRequest
             The request object
 
         Returns
