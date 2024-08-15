@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.cache import never_cache
 
 from .models import AppUser
 
@@ -11,6 +13,7 @@ class SignInView(View):
     The sign in view
     """
 
+    @method_decorator(never_cache)
     def get(self, request: HttpRequest) -> HttpResponse:
         """
         Renders the sign in page
