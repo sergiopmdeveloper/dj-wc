@@ -1,11 +1,11 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 
-from .models import AppUser
+from authentication.utils.sign_in import SignIn
 
 
 class SignInView(View):
@@ -50,29 +50,18 @@ class SignInView(View):
             otherwise a successfull HTTP response
         """
 
-        email = request.POST.get("email")
-        password = request.POST.get("password")
+        sign_in = SignIn(request=request)
 
-        errors = []
+        sign_in.validate_data()
 
-        if not email:
-            errors.append("Email is required.")
+        if sign_in.errors:
+            return JsonResponse({"errors": sign_in.errors}, status=422)
 
-        if not password:
-            errors.append("Password is required.")
+        sign_in.validate_user()
 
-        if errors:
-            return JsonResponse({"errors": errors}, status=422)
+        if sign_in.errors:
+            return JsonResponse({"errors": sign_in.errors}, status=401)
 
-        user = AppUser.objects.filter(email=email).first()
-
-        if user:
-            user = authenticate(request, username=user.username, password=password)
-
-        if not user:
-            errors.append("Invalid credentials.")
-            return JsonResponse({"errors": errors}, status=401)
-
-        login(request, user)
+        login(request, sign_in.user)
 
         return HttpResponse(status=204)
