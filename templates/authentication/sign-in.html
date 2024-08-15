@@ -11,5 +11,5 @@
 {% endblock description %}
 
 {% block body %}
-    <sign-in></sign-in>
+    <sign-in csrf-token="{{ csrf_token }}"></sign-in>
 {% endblock body %}

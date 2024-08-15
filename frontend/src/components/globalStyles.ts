@@ -5,6 +5,10 @@ const globalStyles = css`
     margin: 0;
   }
 
+  p {
+    margin: 0;
+  }
+
   input {
     width: 100%;
     box-sizing: border-box;
