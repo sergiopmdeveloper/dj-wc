@@ -119,3 +119,13 @@ class SignUpView(View):
 
         if sign_up.errors:
             return JsonResponse({"errors": sign_up.errors}, status=422)
+
+        sign_up.validate_user()
+
+        if sign_up.errors:
+            return JsonResponse({"errors": sign_up.errors}, status=422)
+
+        sign_up.user.save()
+        login(request, sign_up.user)
+
+        return HttpResponse(status=204)

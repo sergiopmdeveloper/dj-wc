@@ -131,6 +131,9 @@ export class SignUp extends LitElement {
           'X-CSRFToken': this.csrfToken,
         },
       });
+
+      this.errors = [];
+      window.location.href = '/';
     } catch (error) {
       const axiosError = error as AxiosError;
 

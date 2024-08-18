@@ -1,8 +1,10 @@
 from typing import Optional
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 
+from authentication.models import AppUser
 from authentication.utils.abstract_authentication import AbstractAuthentication
 
 
@@ -16,7 +18,7 @@ class SignUp(AbstractAuthentication):
         The request object
     errors : list[str]
         The errors
-    user : Optional[AbstractUser]
+    user : Optional[AppUser]
         The user
 
     Methods
@@ -24,7 +26,7 @@ class SignUp(AbstractAuthentication):
     validate_data()
         Validates the sign up data
     validate_user()
-        TODO: Validate user credentials using the AppUser model
+        Validates the user credentials
     """
 
     def __init__(self, request: WSGIRequest) -> None:
@@ -39,7 +41,7 @@ class SignUp(AbstractAuthentication):
 
         self._request = request
         self.errors = []
-        self.user: Optional[AbstractUser] = None
+        self.user: Optional[AppUser] = None
 
     def validate_data(self) -> None:
         """
@@ -57,7 +59,24 @@ class SignUp(AbstractAuthentication):
 
     def validate_user(self) -> None:
         """
-        TODO: Validate user credentials using the AppUser model
+        Validates the user credentials
         """
 
-        pass
+        user = AppUser(
+            username=self._request.POST.get("username"),
+            email=self._request.POST.get("email"),
+            password=self._request.POST.get("password"),
+        )
+
+        try:
+            user.full_clean()
+        except ValidationError as e:
+            self.errors.extend(e.messages)
+
+        try:
+            validate_password(self._request.POST.get("password"))
+        except ValidationError as e:
+            self.errors.append(list(e.messages)[0])
+
+        if not self.errors:
+            self.user = user
