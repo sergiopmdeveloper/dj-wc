@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = {
   entry: './src/index.ts',
@@ -9,6 +10,10 @@ const common = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
     ],
   },
   resolve: {
@@ -18,6 +23,11 @@ const common = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, '../static/js'),
   },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../css/styles.css',
+    }),
+  ],
 };
 
 const development = {
