@@ -1,5 +1,6 @@
 from typing import Optional
 
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
@@ -79,4 +80,5 @@ class SignUp(AbstractAuthentication):
             self.errors.append(list(e.messages)[0])
 
         if not self.errors:
+            user.password = make_password(user.password)
             self.user = user
