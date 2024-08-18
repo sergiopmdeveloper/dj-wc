@@ -1,6 +1,6 @@
 from django.contrib.auth import login
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -15,7 +15,7 @@ class SignInView(View):
     """
 
     @method_decorator(never_cache)
-    def get(self, request: WSGIRequest) -> HttpResponse:
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
         """
         Renders the sign in page
 
@@ -26,8 +26,9 @@ class SignInView(View):
 
         Returns
         -------
-        HttpResponse
-            The rendered sign in page
+        HttpResponseRedirect | HttpResponse
+            Redirects to the home page if the user is authenticated,
+            otherwise renders the sign in page
         """
 
         if request.user.is_authenticated:
@@ -66,3 +67,31 @@ class SignInView(View):
         login(request, sign_in.user)
 
         return HttpResponse(status=204)
+
+
+class SignUpView(View):
+    """
+    The sign up view
+    """
+
+    @method_decorator(never_cache)
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
+        """
+        Renders the sign up page
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect | HttpResponse
+            Redirects to the home page if the user is authenticated,
+            otherwise renders the sign up page
+        """
+
+        if request.user.is_authenticated:
+            return redirect("home")
+
+        return render(request, "authentication/sign-up.html")
