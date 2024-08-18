@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
@@ -127,5 +127,30 @@ class SignUpView(View):
 
         sign_up.user.save()
         login(request, sign_up.user)
+
+        return HttpResponse(status=204)
+
+
+class SignOutView(View):
+    """
+    The sign out view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponse:
+        """
+        Signs out the user
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponse
+            A successfull HTTP response
+        """
+
+        logout(request)
 
         return HttpResponse(status=204)
