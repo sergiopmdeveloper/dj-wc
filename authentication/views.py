@@ -7,6 +7,7 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 
 from authentication.utils.sign_in import SignIn
+from authentication.utils.sign_up import SignUp
 
 
 class SignInView(View):
@@ -95,3 +96,26 @@ class SignUpView(View):
             return redirect("home")
 
         return render(request, "authentication/sign-up.html")
+
+    def post(self, request: WSGIRequest) -> JsonResponse | HttpResponse:
+        """
+        Handles the sign up form submission
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        JsonResponse | HttpResponse
+            A JSON response if there are errors,
+            otherwise a successfull HTTP response
+        """
+
+        sign_up = SignUp(request=request)
+
+        sign_up.validate_data()
+
+        if sign_up.errors:
+            return JsonResponse({"errors": sign_up.errors}, status=422)

@@ -11,5 +11,5 @@
 {% endblock description %}
 
 {% block body %}
-    <sign-up></sign-up>
+    <sign-up csrf-token="{{ csrf_token }}"></sign-up>
 {% endblock body %}
