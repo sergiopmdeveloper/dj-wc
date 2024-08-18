@@ -7,7 +7,9 @@ class AppUser(AbstractUser):
     Custom user model
     """
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        unique=True, error_messages={"unique": "A user with that email already exists."}
+    )
 
     def __str__(self) -> str:
         """
