@@ -4,6 +4,10 @@ pre-commit
 
 pre_commit_exit_code=$?
 
+djlint templates/
+
+djlint_exit_code=$?
+
 cd frontend || exit 1
 
 npm run prettier
@@ -12,7 +16,7 @@ prettier_exit_code=$?
 
 cd ..
 
-if [ $pre_commit_exit_code -ne 0 ] || [ $prettier_exit_code -ne 0 ]; then
+if [ $pre_commit_exit_code -ne 0 ] || [ $djlint_exit_code -ne 0 ] || [ $prettier_exit_code -ne 0 ]; then
     exit 1
 fi
 

@@ -1,0 +1,2 @@
+[tool.djlint]
+max_blank_lines=1

@@ -1,12 +1,13 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 
 from authentication.utils.sign_in import SignIn
+from authentication.utils.sign_up import SignUp
 
 
 class SignInView(View):
@@ -15,7 +16,7 @@ class SignInView(View):
     """
 
     @method_decorator(never_cache)
-    def get(self, request: WSGIRequest) -> HttpResponse:
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
         """
         Renders the sign in page
 
@@ -26,8 +27,9 @@ class SignInView(View):
 
         Returns
         -------
-        HttpResponse
-            The rendered sign in page
+        HttpResponseRedirect | HttpResponse
+            Redirects to the home page if the user is authenticated,
+            otherwise renders the sign in page
         """
 
         if request.user.is_authenticated:
@@ -64,5 +66,91 @@ class SignInView(View):
             return JsonResponse({"errors": sign_in.errors}, status=401)
 
         login(request, sign_in.user)
+
+        return HttpResponse(status=204)
+
+
+class SignUpView(View):
+    """
+    The sign up view
+    """
+
+    @method_decorator(never_cache)
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
+        """
+        Renders the sign up page
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect | HttpResponse
+            Redirects to the home page if the user is authenticated,
+            otherwise renders the sign up page
+        """
+
+        if request.user.is_authenticated:
+            return redirect("home")
+
+        return render(request, "authentication/sign-up.html")
+
+    def post(self, request: WSGIRequest) -> JsonResponse | HttpResponse:
+        """
+        Handles the sign up form submission
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        JsonResponse | HttpResponse
+            A JSON response if there are errors,
+            otherwise a successfull HTTP response
+        """
+
+        sign_up = SignUp(request=request)
+
+        sign_up.validate_data()
+
+        if sign_up.errors:
+            return JsonResponse({"errors": sign_up.errors}, status=422)
+
+        sign_up.validate_user()
+
+        if sign_up.errors:
+            return JsonResponse({"errors": sign_up.errors}, status=422)
+
+        sign_up.user.save()
+        login(request, sign_up.user)
+
+        return HttpResponse(status=204)
+
+
+class SignOutView(View):
+    """
+    The sign out view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponse:
+        """
+        Signs out the user
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponse
+            A successfull HTTP response
+        """
+
+        logout(request)
 
         return HttpResponse(status=204)

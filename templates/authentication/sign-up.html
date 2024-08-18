@@ -1,15 +1,15 @@
-{# Home template #}
+{# Sign up template #}
 
 {% extends "page.html" %}
 
 {% block title %}
-  dj-wc | Home
+    dj-wc | Sign up
 {% endblock title %}
 
 {% block description %}
-  Home page
+    Sign up page
 {% endblock description %}
 
 {% block body %}
-  <sign-out></sign-out>
+    <sign-up csrf-token="{{ csrf_token }}"></sign-up>
 {% endblock body %}
