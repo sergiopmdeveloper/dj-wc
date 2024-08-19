@@ -168,6 +168,21 @@ class EmailConfirmationView(View):
         )
 
 
+class ActivateAccountView(View):
+    """
+    The activate account view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponse:
+        """
+        TODO: Validate the token and activate the user account
+        """
+
+        print(request)
+
+        return HttpResponse(status=204)
+
+
 class SignOutView(View):
     """
     The sign out view

@@ -10,5 +10,8 @@ urlpatterns = [
         views.EmailConfirmationView.as_view(),
         name="email-confirmation",
     ),
+    path(
+        "activate-account", views.ActivateAccountView.as_view(), name="activate-account"
+    ),
     path("sign-out", views.SignOutView.as_view(), name="sign-out"),
 ]
