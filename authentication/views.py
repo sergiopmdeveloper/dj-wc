@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 
+from authentication.models import AppUser
 from authentication.utils.sign_in import SignIn
 from authentication.utils.sign_up import SignUp
 
@@ -126,9 +127,42 @@ class SignUpView(View):
             return JsonResponse({"errors": sign_up.errors}, status=422)
 
         sign_up.user.save()
-        login(request, sign_up.user)
 
         return HttpResponse(status=204)
+
+
+class EmailConfirmationView(View):
+    """
+    The email confirmation view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
+        """
+        Renders the email confirmation page
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect | HttpResponse
+            Redirects to the sign in page if not user is found
+            for the given email or the user is already active,
+            otherwise renders the email confirmation page
+        """
+
+        email = request.GET.get("email")
+
+        user = AppUser.objects.filter(email=email).first()
+
+        if not user or user.is_active:
+            return redirect("sign-in")
+
+        return render(
+            request, "authentication/email-confirmation.html", {"email": email}
+        )
 
 
 class SignOutView(View):

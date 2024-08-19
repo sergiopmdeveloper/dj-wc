@@ -133,7 +133,7 @@ export class SignUp extends LitElement {
       });
 
       this.errors = [];
-      window.location.href = '/';
+      window.location.href = `/email-confirmation?email=${formData.get('email')}`;
     } catch (error) {
       const axiosError = error as AxiosError;
 
