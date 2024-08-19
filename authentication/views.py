@@ -8,7 +8,7 @@ from django.views.decorators.cache import never_cache
 
 from authentication.models import AppUser
 from authentication.utils.email.sender import EmailConfirmationSender
-from authentication.utils.email.tokens import EmailConfirmationTokens
+from authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
 from authentication.utils.sign_in import SignIn
 from authentication.utils.sign_up import SignUp
 
@@ -173,14 +173,44 @@ class ActivateAccountView(View):
     The activate account view
     """
 
-    def get(self, request: WSGIRequest) -> HttpResponse:
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect:
         """
-        TODO: Validate the token and activate the user account
+        Activates the user account
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect
+            Redirects to the sign up page if the token is invalid or user is not found,
+            redirects to the sign in page if the user is already active,
+            otherwise signs in the user and redirects to the home page
         """
 
-        print(request)
+        token = request.GET.get("token")
 
-        return HttpResponse(status=204)
+        try:
+            user_id = EmailConfirmationTokens.validate_token(token=token)
+        except TokenError:
+            return redirect("sign-up")
+
+        user = AppUser.objects.filter(id=user_id).first()
+
+        if not user:
+            return redirect("sign-up")
+
+        if user.is_active:
+            return redirect("sign-in")
+
+        user.is_active = True
+        user.save()
+
+        login(request, user)
+
+        return redirect("home")
 
 
 class SignOutView(View):
