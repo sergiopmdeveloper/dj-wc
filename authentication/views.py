@@ -7,6 +7,7 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 
 from authentication.models import AppUser
+from authentication.utils.email.sender import EmailConfirmationSender
 from authentication.utils.email.tokens import EmailConfirmationTokens
 from authentication.utils.sign_in import SignIn
 from authentication.utils.sign_up import SignUp
@@ -128,8 +129,7 @@ class SignUpView(View):
             return JsonResponse({"errors": sign_up.errors}, status=422)
 
         sign_up.user.save()
-
-        print(EmailConfirmationTokens.generate_token(sign_up.user.id))
+        EmailConfirmationSender.send_email(request=request, user=sign_up.user)
 
         return HttpResponse(status=204)
 
