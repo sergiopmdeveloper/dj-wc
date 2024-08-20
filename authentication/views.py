@@ -164,7 +164,7 @@ class EmailConfirmationView(View):
 
         user = AppUser.objects.filter(email=email).first()
 
-        if not user or user.is_active:
+        if not user or user.email_confirmed:
             return redirect("sign-in")
 
         return render(
