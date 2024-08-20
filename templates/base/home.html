@@ -12,4 +12,5 @@
 
 {% block body %}
   <sign-out></sign-out>
+  {% if account_activated %}<use-toast type="success" message="Account activated"></use-toast>{% endif %}
 {% endblock body %}

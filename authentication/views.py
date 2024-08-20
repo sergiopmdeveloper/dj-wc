@@ -38,7 +38,11 @@ class SignInView(View):
         if request.user.is_authenticated:
             return redirect("home")
 
-        return render(request, "authentication/sign-in.html")
+        redirected = request.GET.get("next")
+
+        return render(
+            request, "authentication/sign-in.html", {"redirected": redirected}
+        )
 
     def post(self, request: WSGIRequest) -> JsonResponse | HttpResponse:
         """
@@ -210,7 +214,10 @@ class ActivateAccountView(View):
 
         login(request, user)
 
-        return redirect("home")
+        response = redirect("home")
+        response.set_cookie("accountActivated", "true")
+
+        return response
 
 
 class SignOutView(View):
