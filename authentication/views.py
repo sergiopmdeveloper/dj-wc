@@ -210,6 +210,7 @@ class ActivateAccountView(View):
             return redirect("sign-in")
 
         user.is_active = True
+        user.email_confirmed = True
         user.save()
 
         login(request, user)
