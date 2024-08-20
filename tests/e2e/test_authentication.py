@@ -178,9 +178,10 @@ def test_sign_up_post_success(client: Client):
             "password": "secret1234",
         },
     )
+    user = AppUser.objects.get(username="username")
 
     assert response.status_code == 204
-    assert client.session["_auth_user_id"] is not None
+    assert user.is_active is False
 
 
 @pytest.mark.django_db
