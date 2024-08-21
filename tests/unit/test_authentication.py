@@ -2,9 +2,9 @@ import pytest
 from django.test import RequestFactory
 
 from authentication.models import AppUser
+from authentication.utils.auth.sign_in import SignIn
+from authentication.utils.auth.sign_up import SignUp
 from authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
-from authentication.utils.sign_in import SignIn
-from authentication.utils.sign_up import SignUp
 
 
 def test_sign_in_init(rf: RequestFactory):

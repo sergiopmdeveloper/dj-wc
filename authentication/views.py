@@ -7,10 +7,10 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 
 from authentication.models import AppUser
+from authentication.utils.auth.sign_in import SignIn
+from authentication.utils.auth.sign_up import SignUp
 from authentication.utils.email.sender import EmailConfirmationSender
 from authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
-from authentication.utils.sign_in import SignIn
-from authentication.utils.sign_up import SignUp
 
 
 class SignInView(View):

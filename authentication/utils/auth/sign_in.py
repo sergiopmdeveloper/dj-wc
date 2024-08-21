@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.handlers.wsgi import WSGIRequest
 
 from authentication.models import AppUser
-from authentication.utils.abstract_authentication import AbstractAuthentication
+from authentication.utils.auth.abstract_authentication import AbstractAuthentication
 
 
 class SignIn(AbstractAuthentication):
