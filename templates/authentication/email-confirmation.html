@@ -1,0 +1,15 @@
+{# Email confirmation template #}
+
+{% extends "page.html" %}
+
+{% block title %}
+    dj-wc | Email confirmation
+{% endblock title %}
+
+{% block description %}
+    Email confirmation page
+{% endblock description %}
+
+{% block body %}
+    <email-confirmation email="{{ email }}"></email-confirmation>
+{% endblock body %}

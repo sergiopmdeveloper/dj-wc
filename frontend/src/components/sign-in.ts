@@ -9,9 +9,6 @@ export class SignIn extends LitElement {
   @property({ attribute: 'csrf-token' })
   csrfToken: string = '';
 
-  @property({ attribute: 'forbidden' })
-  forbidden: boolean = false;
-
   @property({ attribute: 'sending' })
   sending: boolean = false;
 
@@ -19,17 +16,6 @@ export class SignIn extends LitElement {
   errors: string[] = [];
 
   static styles = css`
-    span {
-      position: absolute;
-      font-size: 0.75rem;
-      border-radius: 0.25rem;
-      background-color: lightcoral;
-      color: darkred;
-      padding: 0.5rem;
-      right: 0.75rem;
-      top: 0.75rem;
-    }
-
     main {
       height: 100vh;
       display: flex;
@@ -83,8 +69,6 @@ export class SignIn extends LitElement {
 
   render() {
     return html`
-      ${this.forbidden ? html`<span>Forbidden</span>` : ''}
-
       <main>
         <div>
           <h1>Sign in</h1>
@@ -113,28 +97,6 @@ export class SignIn extends LitElement {
         </div>
       </main>
     `;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.showForbiddenMessage();
-  }
-
-  /**
-   * Shows the forbidden message when the
-   * `next` query parameter is present in the URL
-   */
-  showForbiddenMessage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const next = urlParams.get('next');
-
-    if (next) {
-      this.forbidden = true;
-
-      setTimeout(() => {
-        this.forbidden = false;
-      }, 3000);
-    }
   }
 
   /**

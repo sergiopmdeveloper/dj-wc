@@ -1,2 +1,5 @@
 [tool.djlint]
 max_blank_lines=1
+
+[tool.isort]
+profile = "black"

@@ -81,4 +81,5 @@ class SignUp(AbstractAuthentication):
 
         if not self.errors:
             user.password = make_password(user.password)
+            user.is_active = False
             self.user = user

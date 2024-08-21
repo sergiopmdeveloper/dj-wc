@@ -20,4 +20,13 @@ def home(request: WSGIRequest) -> HttpResponse:
         The rendered home page
     """
 
-    return render(request, "base/home.html")
+    account_activated = request.COOKIES.get("accountActivated")
+
+    response = render(
+        request, "base/home.html", {"account_activated": account_activated}
+    )
+
+    if account_activated:
+        response.delete_cookie("accountActivated")
+
+    return response

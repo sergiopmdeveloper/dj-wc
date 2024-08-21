@@ -12,4 +12,5 @@
 
 {% block body %}
     <sign-in csrf-token="{{ csrf_token }}"></sign-in>
+    {% if redirected %}<use-toast type="error" message="Forbidden"></use-toast>{% endif %}
 {% endblock body %}

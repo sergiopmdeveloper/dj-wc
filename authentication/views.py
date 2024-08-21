@@ -6,6 +6,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 
+from authentication.models import AppUser
+from authentication.utils.email.sender import EmailConfirmationSender
+from authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
 from authentication.utils.sign_in import SignIn
 from authentication.utils.sign_up import SignUp
 
@@ -35,7 +38,11 @@ class SignInView(View):
         if request.user.is_authenticated:
             return redirect("home")
 
-        return render(request, "authentication/sign-in.html")
+        redirected = request.GET.get("next")
+
+        return render(
+            request, "authentication/sign-in.html", {"redirected": redirected}
+        )
 
     def post(self, request: WSGIRequest) -> JsonResponse | HttpResponse:
         """
@@ -126,9 +133,92 @@ class SignUpView(View):
             return JsonResponse({"errors": sign_up.errors}, status=422)
 
         sign_up.user.save()
-        login(request, sign_up.user)
+        EmailConfirmationSender.send_email(request=request, user=sign_up.user)
 
         return HttpResponse(status=204)
+
+
+class EmailConfirmationView(View):
+    """
+    The email confirmation view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect | HttpResponse:
+        """
+        Renders the email confirmation page
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect | HttpResponse
+            Redirects to the sign in page if not user is found
+            for the given email or the user is already active,
+            otherwise renders the email confirmation page
+        """
+
+        email = request.GET.get("email")
+
+        user = AppUser.objects.filter(email=email).first()
+
+        if not user or user.email_confirmed:
+            return redirect("sign-in")
+
+        return render(
+            request, "authentication/email-confirmation.html", {"email": email}
+        )
+
+
+class ActivateAccountView(View):
+    """
+    The activate account view
+    """
+
+    def get(self, request: WSGIRequest) -> HttpResponseRedirect:
+        """
+        Activates the user account
+
+        Parameters
+        ----------
+        request : WSGIRequest
+            The request object
+
+        Returns
+        -------
+        HttpResponseRedirect
+            Redirects to the sign up page if the token is invalid or user is not found,
+            redirects to the sign in page if the user is already active,
+            otherwise signs in the user and redirects to the home page
+        """
+
+        token = request.GET.get("token")
+
+        try:
+            user_id = EmailConfirmationTokens.validate_token(token=token)
+        except TokenError:
+            return redirect("sign-up")
+
+        user = AppUser.objects.filter(id=user_id).first()
+
+        if not user:
+            return redirect("sign-up")
+
+        if user.email_confirmed:
+            return redirect("sign-in")
+
+        user.is_active = True
+        user.email_confirmed = True
+        user.save()
+
+        login(request, user)
+
+        response = redirect("home")
+        response.set_cookie("accountActivated", "true")
+
+        return response
 
 
 class SignOutView(View):
