@@ -206,7 +206,7 @@ class ActivateAccountView(View):
         if not user:
             return redirect("sign-up")
 
-        if user.is_active:
+        if user.email_confirmed:
             return redirect("sign-in")
 
         user.is_active = True
