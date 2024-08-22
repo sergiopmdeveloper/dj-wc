@@ -3,15 +3,14 @@
 {% extends "page.html" %}
 
 {% block title %}
-    dj-wc | User
+    dj-wc | {{ user.username }}
 {% endblock title %}
 
 {% block description %}
-    User page
+    Page of the user {{ user.username }}
 {% endblock description %}
 
 {% block body %}
-    <h1>{{ user.email }}</h1>
-    <sign-out></sign-out>
+    <app-header user-id="{{ user.id }}"></app-header>
     {% if account_activated %}<use-toast type="success" message="Account activated"></use-toast>{% endif %}
 {% endblock body %}

@@ -1,6 +1,10 @@
 import { css } from 'lit';
 
 const globalStyles = css`
+  :host {
+    --screen-xl: 1280px;
+  }
+
   h1 {
     margin: 0;
   }
@@ -19,6 +23,17 @@ const globalStyles = css`
   button {
     cursor: pointer;
     border: 0;
+  }
+
+  .section-parent {
+    width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .section-child {
+    max-width: var(--screen-xl);
+    margin: 0 auto;
   }
 `;
 
