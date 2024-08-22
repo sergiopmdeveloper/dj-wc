@@ -31,12 +31,12 @@ class SignInView(View):
         Returns
         -------
         HttpResponseRedirect | HttpResponse
-            Redirects to the home page if the user is authenticated,
+            Redirects to the user page if the user is authenticated,
             otherwise renders the sign in page
         """
 
         if request.user.is_authenticated:
-            return redirect("home")
+            return redirect("user")
 
         redirected = request.GET.get("next")
 
@@ -95,12 +95,12 @@ class SignUpView(View):
         Returns
         -------
         HttpResponseRedirect | HttpResponse
-            Redirects to the home page if the user is authenticated,
+            Redirects to the user page if the user is authenticated,
             otherwise renders the sign up page
         """
 
         if request.user.is_authenticated:
-            return redirect("home")
+            return redirect("user")
 
         return render(request, "authentication/sign-up.html")
 
@@ -191,7 +191,7 @@ class ActivateAccountView(View):
         HttpResponseRedirect
             Redirects to the sign up page if the token is invalid or user is not found,
             redirects to the sign in page if the user is already active,
-            otherwise signs in the user and redirects to the home page
+            otherwise signs in the user and redirects to the user page
         """
 
         token = request.GET.get("token")
@@ -215,7 +215,7 @@ class ActivateAccountView(View):
 
         login(request, user)
 
-        response = redirect("home")
+        response = redirect("user")
         response.set_cookie("accountActivated", "true")
 
         return response

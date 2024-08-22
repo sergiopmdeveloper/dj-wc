@@ -1,0 +1,17 @@
+{# User template #}
+
+{% extends "page.html" %}
+
+{% block title %}
+    dj-wc | User
+{% endblock title %}
+
+{% block description %}
+    User page
+{% endblock description %}
+
+{% block body %}
+    <h1>{{ user.email }}</h1>
+    <sign-out></sign-out>
+    {% if account_activated %}<use-toast type="success" message="Account activated"></use-toast>{% endif %}
+{% endblock body %}

@@ -122,7 +122,7 @@ export class SignIn extends LitElement {
       });
 
       this.errors = [];
-      window.location.href = '/';
+      window.location.href = '/user';
     } catch (error) {
       const axiosError = error as AxiosError;
 
