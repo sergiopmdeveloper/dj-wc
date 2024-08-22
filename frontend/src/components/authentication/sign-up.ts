@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { addGlobalStyles } from './globalStyles';
+import { addGlobalStyles } from '../globalStyles';
 
-@customElement('sign-in')
+@customElement('sign-up')
 @addGlobalStyles()
-export class SignIn extends LitElement {
+export class SignUp extends LitElement {
   @property({ attribute: 'csrf-token' })
   csrfToken: string = '';
 
@@ -71,9 +71,20 @@ export class SignIn extends LitElement {
     return html`
       <main>
         <div>
-          <h1>Sign in</h1>
+          <h1>Sign up</h1>
 
-          <form @submit=${this.signIn}>
+          <form @submit=${this.signUp}>
+            <div>
+              <label for="username">Username</label>
+
+              <input
+                type="text"
+                id="username"
+                name="username"
+                autocomplete="username"
+              />
+            </div>
+
             <div>
               <label for="email">Email</label>
               <input type="text" id="email" name="email" autocomplete="email" />
@@ -100,13 +111,13 @@ export class SignIn extends LitElement {
   }
 
   /**
-   * Handles the sign in form submission
+   * Handles the sign up form submission
 
    * @param {Event} e - The submit event from the form
    * @returns {Promise<void>} - The promise that resolves when the request is successful
    * @throws {AxiosError} When the request fails
    */
-  async signIn(e: Event): Promise<void> {
+  async signUp(e: Event): Promise<void> {
     e.preventDefault();
 
     this.sending = true;
@@ -115,22 +126,19 @@ export class SignIn extends LitElement {
     const formData = new FormData(form);
 
     try {
-      await axios.post(`${window.location.origin}/sign-in`, formData, {
+      await axios.post(`${window.location.origin}/sign-up`, formData, {
         headers: {
           'X-CSRFToken': this.csrfToken,
         },
       });
 
       this.errors = [];
-      window.location.href = '/user';
+      window.location.href = `/email-confirmation?email=${formData.get('email')}`;
     } catch (error) {
       const axiosError = error as AxiosError;
 
-      if (
-        axiosError.response?.status === 422 ||
-        axiosError.response?.status === 401
-      ) {
-        const responseData = axiosError.response.data as SignInErrorData;
+      if (axiosError.response?.status === 422) {
+        const responseData = axiosError.response.data as SignUpErrorData;
         this.errors = responseData.errors;
       }
     } finally {
@@ -139,6 +147,6 @@ export class SignIn extends LitElement {
   }
 }
 
-interface SignInErrorData {
+interface SignUpErrorData {
   errors: string[];
 }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { addGlobalStyles } from './globalStyles';
+import { addGlobalStyles } from '../globalStyles';
 
 @customElement('sign-out')
 @addGlobalStyles()

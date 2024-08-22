@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { addGlobalStyles } from './globalStyles';
+import { addGlobalStyles } from '../globalStyles';
 
 @customElement('email-confirmation')
 @addGlobalStyles()
