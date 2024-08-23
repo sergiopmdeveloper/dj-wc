@@ -28,6 +28,7 @@ const globalStyles = css`
   .section-parent {
     width: 100%;
     padding: 0 1rem;
+    margin-bottom: 1rem;
     box-sizing: border-box;
   }
 

@@ -6,6 +6,11 @@ export * from './authentication/sign-in';
 export * from './authentication/sign-up';
 
 /**
+ * USERS APP COMPONENTS
+ */
+export * from './users/user-info-form';
+
+/**
  * UI COMPONENTS
  */
 export * from './ui/app-header';
