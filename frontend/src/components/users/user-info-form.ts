@@ -91,6 +91,11 @@ export class UserInfoForm extends LitElement {
     `;
   }
 
+  firstUpdated() {
+    this.currentFirstName = this.firstName;
+    this.currentLastName = this.lastName;
+  }
+
   /**
    * Updates the current first name and last
    * name values when the input fields change
