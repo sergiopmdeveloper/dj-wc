@@ -21,7 +21,7 @@ export class UseToast extends LitElement {
       border-radius: 0.25rem;
       padding: 0.5rem;
       right: 0.75rem;
-      top: 0.75rem;
+      bottom: 0.75rem;
     }
 
     .success {
