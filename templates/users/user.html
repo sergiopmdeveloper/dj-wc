@@ -12,6 +12,6 @@
 
 {% block body %}
     <app-header user-id="{{ user.id }}"></app-header>
-    <user-info-form first-name="{{ user.first_name }}" last-name="{{ user.last_name }}"></user-info-form>
+    <user-info-form csrf-token="{{ csrf_token }}" first-name="{{ user.first_name }}" last-name="{{ user.last_name }}"></user-info-form>
     {% if account_activated %}<use-toast type="success" message="Account activated"></use-toast>{% endif %}
 {% endblock body %}

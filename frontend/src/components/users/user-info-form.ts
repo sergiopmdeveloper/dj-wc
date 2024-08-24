@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { addGlobalStyles } from '../globalStyles';
@@ -5,6 +6,9 @@ import { addGlobalStyles } from '../globalStyles';
 @customElement('user-info-form')
 @addGlobalStyles()
 export class UserInfoForm extends LitElement {
+  @property({ attribute: 'csrf-token' })
+  csrfToken: string = '';
+
   @property({ attribute: 'first-name' })
   firstName: string = '';
 
@@ -16,6 +20,9 @@ export class UserInfoForm extends LitElement {
 
   @state()
   private currentLastName: string = '';
+
+  @state()
+  private sending: boolean = false;
 
   static styles = css`
     h1 {
@@ -55,7 +62,7 @@ export class UserInfoForm extends LitElement {
       <div class="section-parent">
         <div class="section-child">
           <h1>User info</h1>
-          <form>
+          <form @submit=${this.updateUserInfo}>
             <div>
               <label for="first-name">First name</label>
 
@@ -82,7 +89,10 @@ export class UserInfoForm extends LitElement {
               />
             </div>
 
-            <button type="submit" ?disabled=${this.isFormUnchanged()}>
+            <button
+              type="submit"
+              ?disabled=${this.isFormUnchanged() || this.sending}
+            >
               Save
             </button>
           </form>
@@ -91,9 +101,19 @@ export class UserInfoForm extends LitElement {
     `;
   }
 
-  firstUpdated() {
-    this.currentFirstName = this.firstName;
-    this.currentLastName = this.lastName;
+  willUpdate(changedProperties: Map<string, any>) {
+    if (
+      changedProperties.has('firstName') &&
+      this.firstName !== this.currentFirstName
+    ) {
+      this.currentFirstName = this.firstName;
+    }
+    if (
+      changedProperties.has('lastName') &&
+      this.lastName !== this.currentLastName
+    ) {
+      this.currentLastName = this.lastName;
+    }
   }
 
   /**
@@ -122,5 +142,34 @@ export class UserInfoForm extends LitElement {
       this.currentFirstName === this.firstName &&
       this.currentLastName === this.lastName
     );
+  }
+
+  /**
+   * Handles the user info form submission
+   *
+   * @param {Event} e - The submit event from the form
+   */
+  async updateUserInfo(e: Event) {
+    e.preventDefault();
+
+    this.sending = true;
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    try {
+      await axios.post(`${window.location.origin}/user`, formData, {
+        headers: {
+          'X-CSRFToken': this.csrfToken,
+        },
+      });
+
+      this.firstName = this.currentFirstName;
+      this.lastName = this.currentLastName;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.sending = false;
+    }
   }
 }
