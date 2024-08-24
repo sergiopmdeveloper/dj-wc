@@ -24,6 +24,9 @@ export class UserInfoForm extends LitElement {
   @state()
   private sending: boolean = false;
 
+  @state()
+  private userUpdated: boolean = false;
+
   static styles = css`
     h1 {
       color: black;
@@ -59,6 +62,10 @@ export class UserInfoForm extends LitElement {
 
   render() {
     return html`
+      ${this.userUpdated
+        ? html` <use-toast type="success" message="Info updated"></use-toast> `
+        : ''}
+
       <div class="section-parent">
         <div class="section-child">
           <h1>User info</h1>
@@ -164,8 +171,13 @@ export class UserInfoForm extends LitElement {
         },
       });
 
+      this.userUpdated = true;
       this.firstName = this.currentFirstName;
       this.lastName = this.currentLastName;
+
+      setTimeout(() => {
+        this.userUpdated = false;
+      }, 3000);
     } catch (error) {
       console.error(error);
     } finally {
