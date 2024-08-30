@@ -5,8 +5,10 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 
-from authentication.models import AppUser
-from authentication.utils.auth.abstract_authentication import AbstractAuthentication
+from apps.authentication.models import AppUser
+from apps.authentication.utils.auth.abstract_authentication import (
+    AbstractAuthentication,
+)
 
 
 class SignUp(AbstractAuthentication):

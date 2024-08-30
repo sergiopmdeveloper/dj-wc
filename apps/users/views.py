@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from authentication.models import AppUser
+from apps.authentication.models import AppUser
 
 
 class UserView(View):

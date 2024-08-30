@@ -6,11 +6,11 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 
-from authentication.models import AppUser
-from authentication.utils.auth.sign_in import SignIn
-from authentication.utils.auth.sign_up import SignUp
-from authentication.utils.email.sender import EmailConfirmationSender
-from authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
+from apps.authentication.models import AppUser
+from apps.authentication.utils.auth.sign_in import SignIn
+from apps.authentication.utils.auth.sign_up import SignUp
+from apps.authentication.utils.email.sender import EmailConfirmationSender
+from apps.authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
 
 
 class SignInView(View):
