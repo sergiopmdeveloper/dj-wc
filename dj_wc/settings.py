@@ -5,10 +5,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+#################
+# CORE SETTINGS #
+#################
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-=19%dh2e$lww8i+@cukox!+cb0(l=ht*#*_&t29h41hl77b8zv"
 DEBUG = True
 ALLOWED_HOSTS = []
+ROOT_URLCONF = "dj_wc.urls"
+WSGI_APPLICATION = "dj_wc.wsgi.application"
+
+
+################
+# APPLICATIONS #
+################
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -20,6 +32,11 @@ INSTALLED_APPS = [
     "apps.authentication",
 ]
 
+
+##############
+# MIDDLEWARE #
+##############
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -30,7 +47,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "dj_wc.urls"
+
+#############
+# TEMPLATES #
+#############
 
 TEMPLATES = [
     {
@@ -48,7 +68,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "dj_wc.wsgi.application"
+
+#############
+# DATABASES #
+#############
 
 DATABASES = {
     "default": {
@@ -56,6 +79,11 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+
+########
+# AUTH #
+########
 
 AUTH_USER_MODEL = "authentication.AppUser"
 
@@ -74,10 +102,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+########################
+# INTERNATIONALIZATION #
+########################
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+
+################
+# STATIC FILES #
+################
+
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -91,7 +130,18 @@ STORAGES = {
     },
 }
 
+
+#################
+# MISC SETTINGS #
+#################
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+################
+# EMAIL CONFIG #
+################
+
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
