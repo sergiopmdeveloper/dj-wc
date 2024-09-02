@@ -9,8 +9,12 @@ from django.views.decorators.cache import never_cache
 from apps.authentication.models import AppUser
 from apps.authentication.utils.auth.sign_in import SignIn
 from apps.authentication.utils.auth.sign_up import SignUp
-from apps.authentication.utils.email.sender import EmailConfirmationSender
-from apps.authentication.utils.email.tokens import EmailConfirmationTokens, TokenError
+from utils.email.context import EmailContext
+from utils.email.strategies.email_confirmation import EmailConfirmationStrategy
+from utils.tokens.exceptions import TokenValidationError
+from utils.tokens.tokens import Tokens
+
+email_confirmation = EmailContext(strategy=EmailConfirmationStrategy)
 
 
 class SignInView(View):
@@ -133,7 +137,10 @@ class SignUpView(View):
             return JsonResponse({"errors": sign_up.errors}, status=422)
 
         sign_up.user.save()
-        EmailConfirmationSender.send_email(request=request, user=sign_up.user)
+
+        email_confirmation.send(
+            to=sign_up.user.email, request=request, user_id=sign_up.user.id
+        )
 
         return HttpResponse(status=204)
 
@@ -197,11 +204,11 @@ class ActivateAccountView(View):
         token = request.GET.get("token")
 
         try:
-            user_id = EmailConfirmationTokens.validate_token(token=token)
-        except TokenError:
+            payload = Tokens.validate_token(token=token)
+        except TokenValidationError:
             return redirect("sign-up")
 
-        user = AppUser.objects.filter(id=user_id).first()
+        user = AppUser.objects.filter(id=payload["user_id"]).first()
 
         if not user:
             return redirect("sign-up")

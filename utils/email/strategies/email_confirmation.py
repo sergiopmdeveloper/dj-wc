@@ -38,7 +38,7 @@ class EmailConfirmationStrategy(EmailStrategyAbstract):
         view_context = {
             "protocol": "https" if request.is_secure() else "http",
             "domain": get_current_site(request).domain,
-            "token": Tokens.generate_token(user_id=user_id),
+            "token": Tokens.generate_token(data={"user_id": user_id}),
         }
 
         html_message = render_to_string(TEMPLATE, view_context)
